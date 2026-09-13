@@ -1,11 +1,14 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://chat-with-docs-api.onrender.com";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || "https://chat-with-docs-api.onrender.com")
+  .replace(/\/+$/, "");
 
 async function request(path, options = {}) {
   let response;
   try {
     response = await fetch(`${API_BASE}${path}`, options);
   } catch (error) {
-    throw new Error(`Backend is not reachable at ${API_BASE}. Start the backend server and try again.`);
+    throw new Error(
+      `Cannot reach the backend at ${API_BASE}. Check that the Render service is running and that its CORS_ORIGINS setting allows this frontend.`,
+    );
   }
 
   const payload = await response.json().catch(() => ({}));

@@ -23,6 +23,7 @@ MONGO_URI=mongodb://localhost:27017
 MONGO_DB_NAME=chat_with_docs
 GEMINI_API_KEY=your_real_key_here
 GEMINI_MODEL=gemini-2.5-flash
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,https://chatwithdocs-front-chi.vercel.app
 ```
 
 ## 2. Gemini API Key
@@ -91,6 +92,8 @@ VITE_API_BASE_URL=http://127.0.0.1:8020
 - Add your own Gemini API key.
 - Run MongoDB locally or configure MongoDB Atlas.
 - Start the backend before using uploads or chat from the frontend.
+- On Render, set `CORS_ORIGINS` to include the exact Vercel frontend URL, then redeploy the backend. Browser origins must match exactly (scheme and hostname).
+- Verify the deployed backend after a redeploy at `https://chat-with-docs-api.onrender.com/health`; it should return `{"status":"ok"}`.
 
 ## 7. Quick API Reference
 

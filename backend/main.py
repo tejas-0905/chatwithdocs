@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -23,9 +24,26 @@ from rag import chunk_sections, embed_texts, is_summary_question, retrieve_top_c
 
 app = FastAPI(title="Chat With Your Docs API", version="2.0.0")
 
+# Keep the production frontend explicit while allowing additional preview or
+# custom domains to be supplied by the deployment environment.
+DEFAULT_CORS_ORIGINS = (
+    "http://localhost:5173,"
+    "http://127.0.0.1:5173,"
+    "https://chatwithdocs-front-chi.vercel.app"
+)
+CORS_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("CORS_ORIGINS", DEFAULT_CORS_ORIGINS).split(",")
+    if origin.strip()
+]
+# Vercel creates a unique URL for preview deployments. These previews belong to
+# this app, while unrelated Vercel projects remain blocked.
+VERCEL_PREVIEW_ORIGIN_REGEX = r"https://chatwithdocs-front-chi(?:-[a-z0-9-]+)?\.vercel\.app"
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=CORS_ORIGINS,
+    allow_origin_regex=VERCEL_PREVIEW_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -44,6 +62,12 @@ def startup() -> None:
 @app.get("/")
 def root() -> dict:
     return {"status": "ok", "message": "Chat With Your Docs API v2 is running"}
+
+
+@app.get("/health")
+def health() -> dict:
+    """Lightweight endpoint for Render and browser connectivity checks."""
+    return {"status": "ok"}
 
 
 @app.post(
