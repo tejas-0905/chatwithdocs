@@ -81,7 +81,8 @@ http://localhost:5173
 Optional frontend env file:
 
 ```text
-VITE_API_BASE_URL=http://127.0.0.1:8020
+# No API URL is needed. The frontend sends requests to /api and Vite proxies
+# them to http://127.0.0.1:8020 locally.
 ```
 
 ## 6. Manual Steps Still Required
@@ -94,6 +95,7 @@ VITE_API_BASE_URL=http://127.0.0.1:8020
 - Start the backend before using uploads or chat from the frontend.
 - On Render, set `CORS_ORIGINS` to include the exact Vercel frontend URL, then redeploy the backend. Browser origins must match exactly (scheme and hostname).
 - Verify the deployed backend after a redeploy at `https://chat-with-docs-api.onrender.com/health`; it should return `{"status":"ok"}`.
+- Vercel deployments proxy `/api/*` to Render through `frontend/vercel.json`, so the browser no longer makes cross-origin API calls. Deploy the frontend with `frontend` configured as the Vercel project root directory.
 
 ## 7. Quick API Reference
 

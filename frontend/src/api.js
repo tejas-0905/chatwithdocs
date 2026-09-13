@@ -1,5 +1,7 @@
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "https://chat-with-docs-api.onrender.com")
-  .replace(/\/+$/, "");
+// All browser calls stay on the frontend origin. Vercel forwards `/api/*` to
+// Render in production, and Vite forwards it to the local API during development.
+// This removes cross-origin browser requests and their CORS failure mode.
+const API_BASE = "/api";
 
 async function request(path, options = {}) {
   let response;
