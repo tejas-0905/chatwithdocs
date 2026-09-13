@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://chat-with-docs-api.onrender.com/";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://chat-with-docs-api.onrender.com";
 
 async function request(path, options = {}) {
   let response;
